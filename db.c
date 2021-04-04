@@ -1,7 +1,12 @@
 
 #include <string.h>
 #include <db.h>
-static struct dbinfo db;
+#include <stdio.h>
+struct dbinfo {
+     char name[127];
+     FILE* rec;
+     int recsize;
+  } db;
 static fpos_t f_ptr;
 static int cur_record;
 
