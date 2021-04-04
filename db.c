@@ -1,6 +1,5 @@
 
 #include <string.h>
-#include <db.h>
 #include <stdio.h>
 struct dbinfo {
      char name[127];
