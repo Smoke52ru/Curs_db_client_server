@@ -9,7 +9,8 @@ struct dbinfo {
 static fpos_t f_ptr;
 static int cur_record;
 
-int dbuse(char* fname,int recsize)
+//Открываем базу для записи
+int dbuse(char* fname,int recsize) 
 {
     if((db.rec = fopen(fname,"r+")) == NULL)
 		       db.rec = fopen(fname,"w+");
