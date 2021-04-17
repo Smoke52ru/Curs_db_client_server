@@ -11,6 +11,7 @@
 #define CLIENT_FIFO_NAME "/tmp/cli_%d_fifo"
 
 #define BUFFER_SIZE 20
+#define FIFO_SIZE 1024
 
 struct data_to_pass_st{
     pid_t client_pid;

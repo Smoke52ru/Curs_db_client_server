@@ -5,7 +5,7 @@ int main(){
     int server_fifo_fd, client_fifo_fd;
     struct data_to_pass_st my_data;
     int read_res;
-    char client_fifo[256];    
+    char client_fifo[FIFO_SIZE];    
     char *tmp_char_ptr;
 
     mkfifo(SERVER_FIFO_NAME, 0777);
