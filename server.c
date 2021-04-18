@@ -24,8 +24,8 @@ int main(){
                 *tmp_char_ptr = toupper(*tmp_char_ptr);
                 tmp_char_ptr++;
             }
-            sprintf(client_fifo,CLIENT_FIFO_NAME, my_data.client_pid);
             //Отправляем обратно
+            sprintf(client_fifo,CLIENT_FIFO_NAME, my_data.client_pid);
             client_fifo_fd = open(client_fifo, O_WRONLY);
             if (client_fifo_fd != -1) {
                 write(client_fifo_fd, &my_data, sizeof(my_data));

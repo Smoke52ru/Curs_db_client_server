@@ -19,6 +19,7 @@ int dbuse(char* fname,int recsize)
     db.recsize = recsize;
     return 1;
 }
+//Возвращает количество записей в базе
 int dbreccount(void)
 {
 	 int count;
@@ -31,6 +32,7 @@ int dbreccount(void)
 	 fseek(db.rec,now,SEEK_SET);
 	 return count;
 }
+//Установка указателя на 
 int dbgoto(int number)
 {
 	if(number >= dbreccount())  return 0;
@@ -41,7 +43,6 @@ int dbgoto(int number)
 	fseek(db.rec,db.recsize*(number-1),SEEK_SET);
 	return 1;
 }
-
 
 int dbwrite(void*src)
 {
