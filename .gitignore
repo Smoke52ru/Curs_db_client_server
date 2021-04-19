@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 *.exe
+=======
+database.txt
+client.exe
+server.exe
+client
+server
+>>>>>>> cb79660cf420e8f5af9c2b2c8b4c0250cef5536f
