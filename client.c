@@ -1,4 +1,5 @@
 #include "client.h"
+#include "handler.h"
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -6,7 +7,7 @@
 int main(){
     int server_fifo_fd, client_fifo_fd;
     struct data_to_pass_st my_data;
-    int times_to_send; //FIXME Временно
+    int times_to_send; //FIXME Временно до беск.цикла
     char client_fifo[FIFO_SIZE];
 
     server_fifo_fd = open(SERVER_FIFO_NAME, O_WRONLY);
@@ -25,14 +26,16 @@ int main(){
 
     //Отправка данных
     //TODO Бесконечный цикл 
-    for(times_to_send = 0; times_to_send < 5; times_to_send++) {
-        sprintf(my_data.some_data,"Hello from %d ", (int)my_data.client_pid);
-        printf("%d sent {%s} ", (int)my_data.client_pid, my_data.some_data);
-        write(server_fifo_fd, &my_data, sizeof(my_data));
+    for(times_to_send = 0; times_to_send < 2; times_to_send++) {
+        scanf("%[^\n]%*c",my_data.some_data); //Считывание команды
+        //if (handler(my_data.some_data) == 0)
+        {
+            write(server_fifo_fd, &my_data, sizeof(my_data));
+        }
         client_fifo_fd = open(client_fifo, O_RDONLY);
         if (client_fifo_fd != -1) {
             if (read(client_fifo_fd, &my_data, sizeof(my_data)) > 0){
-                printf("recieved: {%s}\n", my_data.some_data);
+                printf("recieved from server: {%s}\n", my_data.some_data);
             }
             close(client_fifo_fd);
         }
