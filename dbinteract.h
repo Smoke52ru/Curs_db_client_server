@@ -1,4 +1,4 @@
-
+//TODO DBDELETE
 #include <string.h>
 #include <stdio.h>
 struct dbinfo {
@@ -9,7 +9,7 @@ struct dbinfo {
 static fpos_t f_ptr;
 static int cur_record;
 
-//Открываем базу для записи
+//Открываем базу для записи(если ее не существует - создаем)
 int dbuse(char* fname,int recsize) 
 {
     if((db.rec = fopen(fname,"r+")) == NULL)
@@ -32,7 +32,7 @@ int dbreccount(void)
 	 fseek(db.rec,now,SEEK_SET);
 	 return count;
 }
-//Установка указателя на 
+//Установка указателя на n-ную запись
 int dbgoto(int number)
 {
 	if(number >= dbreccount())  return 0;
@@ -43,19 +43,19 @@ int dbgoto(int number)
 	fseek(db.rec,db.recsize*(number-1),SEEK_SET);
 	return 1;
 }
-
+//Запись из src в текущее место в базе
 int dbwrite(void*src)
 {
     if(!fwrite(src,db.recsize,1,db.rec)) return 0;
     return 1;
 }
-
+//Чтение текущей записи из базы
 int dbread(void* dest)
 {
 	if(!fread(dest,db.recsize,1,db.rec)) return 0;
 	return 1;
 }
-
+//Закрытие базы (удаление, если она пустая)
 void dbclose(void)
 {
   if(!dbreccount()){
@@ -65,14 +65,14 @@ void dbclose(void)
   fclose(db.rec);
   return;
 }
-
+//Запись в начало базы
 int dbappend(void*src)
 {
    dbgoto(0);
    return dbwrite(src);
 }
-
+//TODO Удаление базы
 int dbdelete(void)
 {
-
+  int end = dbreccount();
 }
