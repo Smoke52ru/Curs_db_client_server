@@ -30,7 +30,9 @@ int main(){
         scanf("%[^\n]%*c",my_data.some_data); //Считывание команды
         if (handler(my_data.some_data) == 0) {
             write(server_fifo_fd, &my_data, sizeof(my_data));
-        } else {continue;}
+        } else {
+            continue;
+        }
         client_fifo_fd = open(client_fifo, O_RDONLY);
         if (client_fifo_fd != -1) {
             if (read(client_fifo_fd, &my_data, sizeof(my_data)) > 0){

@@ -1,5 +1,4 @@
-database.txt
-client.exe
-server.exe
+*.exe
 client
 server
+
