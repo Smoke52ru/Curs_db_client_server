@@ -31,6 +31,7 @@ int main(){
         if (handler(my_data.some_data) == 0) {
             write(server_fifo_fd, &my_data, sizeof(my_data));
         } else {
+            fprintf(stderr,"ERROR: Command is incorrect\n");
             continue;
         }
         client_fifo_fd = open(client_fifo, O_RDONLY);
