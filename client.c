@@ -26,7 +26,7 @@ int main(){
 
     //Отправка данных
     //TODO Бесконечный цикл 
-    for(times_to_send = 0; times_to_send < 2; times_to_send++) {
+    for(times_to_send = 0; times_to_send < 55; times_to_send++) {
         scanf("%[^\n]%*c",my_data.some_data); //Считывание команды
         if (handler(my_data.some_data) == 0) {
             write(server_fifo_fd, &my_data, sizeof(my_data));
