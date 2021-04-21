@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 int iseng(char ch){
     return (((ch >= 'a') && (ch <='z')) || ((ch >= 'A') && (ch <='Z')));
@@ -29,7 +30,9 @@ int numhandler(char* word, int* sizep, char* wordname){
             return 1;
         }
     }
-    *sizep = i;
+    if (sizep != NULL){
+        *sizep = i;
+    }
     fprintf(stdout, "[%s] is correct\n", wordname);
     return 0;
 }
@@ -46,15 +49,77 @@ int wordhandler(char* word, int* sizep, char* wordname){
             return 1;
         }
     }
-    *sizep = i;
+    if (sizep != NULL){
+        *sizep = i;
+    }
     fprintf(stdout, "[%s] is correct\n", wordname);
     return 0;
 }
 
 
-// Прототип (TODO поддержка команд)
+
+//Проверка отправляемой строки на валидность
 int handler(char *data) {
 
+    //Перевод команды в верхний регистр
+    for (int i = 0; i < 2; i++){
+        *(data + i) = toupper(*(data + i));;
+    }
+    
+
+    //Команда == OP
+    if (strncmp(data, "OP ", 3) == 0){
+        fprintf(stdout,"cmd is %s\n","OP");
+        if (wordhandler(data+3,NULL,"DBName") == 0){      
+            return 0;
+        } else {
+            fprintf(stderr,"ERROR: Data is incorrect\n");
+            return 1;
+        }
+
+    //Команда == RD
+    } else if(strncmp(data, "RD ", 3) == 0){
+        fprintf(stdout,"cmd is %s\n","RD");
+        if (numhandler(data+3,NULL,"Index") == 0){      
+            return 0;
+        } else {
+            fprintf(stderr,"ERROR: Data is incorrect\n");
+            return 1;
+        }
+
+    //Команда == WR
+    } else if(strncmp(data, "WR ", 3) == 0){
+        fprintf(stdout,"cmd is %s\n","WR");
+        if (numhandler(data+3,NULL,"Index") == 0){      
+            return 0;
+        } else {
+            fprintf(stderr,"ERROR: Data is incorrect\n");
+            return 1;
+        }
+
+    //Команда == AD
+    } else if(strncmp(data, "AD ", 3) == 0){
+        fprintf(stdout,"cmd is %s\n","AD");
+
+        return 0; 
+
+    //Команда == DL
+    } else if(strncmp(data, "DL ", 3) == 0){
+        fprintf(stdout,"cmd is %s\n","DL");
+        if (numhandler(data+3,NULL,"Index") == 0){      
+            return 0;
+        } else {
+            fprintf(stderr,"ERROR: Data is incorrect\n");
+            return 1;
+        }
+    }
+
+    //Исключение
+
+    fprintf(stderr,"ERROR: Request is incorrect\n");
+    return 1;
+    
+/*
     char *str[5] = {"OP", "RD", "WR", "AD", "DL"}; // Набор команд
     int cmd_num, cur_char, size;
 
@@ -79,7 +144,6 @@ int handler(char *data) {
             continue;
         }
     }
-    fprintf(stderr,"ERROR: Request is incorrect\n");
-    return 1;
+*/
 }
 
