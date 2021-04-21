@@ -18,9 +18,11 @@ int isseparator(char* ch, char* separators){
     return 0;
 }
 
-int numhandler(char* word, int* sizep, char* wordname){
-    char* ptr = word;
+//Обработка числа
+int numhandler(char* number, int* size, char* wordname){
+    char* ptr = number;
     int i = 0;
+    
     while ((*ptr != ' ') && (*ptr != '\0')) {
         if (isdig(*ptr)){ //  Цифра
             ptr++;
@@ -30,16 +32,24 @@ int numhandler(char* word, int* sizep, char* wordname){
             return 1;
         }
     }
-    if (sizep != NULL){
-        *sizep = i;
+
+    if (size != NULL){
+        *size = i;
+    } else {
+        fprintf(stderr, "ERROR: Empty [%s]\n", wordname);
+        *size = 0;
+        return 1;
     }
+
     fprintf(stdout, "[%s] is correct\n", wordname);
     return 0;
 }
 
-int wordhandler(char* word, int* sizep, char* wordname){
+//Обработка слова
+int wordhandler(char* word, int* size, char* wordname){
     char* ptr = word;
     int i = 0;
+
     while ((*ptr != ' ') && (*ptr != '\0')) {
         if (iseng(*ptr)){ //  Буква
             ptr++;
@@ -49,13 +59,38 @@ int wordhandler(char* word, int* sizep, char* wordname){
             return 1;
         }
     }
-    if (sizep != NULL){
-        *sizep = i;
+
+    if (size != NULL){
+        *size = i;
+    } else {
+        fprintf(stderr, "ERROR: Empty [%s]\n", wordname);
+        *size = 0;
+        return 1;
     }
+
     fprintf(stdout, "[%s] is correct\n", wordname);
     return 0;
 }
 
+// Обработка данных БЕЗ команды 
+int datahandler(char* data, int* size){
+    char* ptr = data;
+    int count = 1, wordsize = 0, datasize = 0;
+
+    if (numhandler(data, &wordsize,"Index")) return 1;
+    datasize += wordsize;
+    while ((*ptr != '\0') && (count < 2)){
+        ptr += wordsize;
+        if (wordhandler(ptr,&wordsize, "Data")) return 1;
+        datasize += wordsize;
+        count++;
+    }
+    if (*ptr == '\0') {
+        fprintf(stderr,"ERROR: Unexpected end of data (word = %d)", );
+        return 1;
+    }
+    return 0;
+}
 
 
 //Проверка отправляемой строки на валидность
@@ -90,6 +125,9 @@ int handler(char *data) {
     //Команда == WR
     } else if(strncmp(data, "WR ", 3) == 0){
         fprintf(stdout,"cmd is %s\n","WR");
+        ///
+        ///
+        //
         if (numhandler(data+3,NULL,"Index") == 0){      
             return 0;
         } else {
@@ -119,31 +157,5 @@ int handler(char *data) {
     fprintf(stderr,"ERROR: Request is incorrect\n");
     return 1;
     
-/*
-    char *str[5] = {"OP", "RD", "WR", "AD", "DL"}; // Набор команд
-    int cmd_num, cur_char, size;
-
-    for (cmd_num = 0; cmd_num < 5; cmd_num++) {
-        if (strncmp(data, str[cmd_num], 2) == 0) {
-            cur_char = 3;
-            if (numhandler(&data[cur_char], &size, "Index")){
-                return 1;
-            }
-            cur_char += size+1;
-
-            if(wordhandler(&data[cur_char], &size, "Name")){
-                return 1;
-            }
-            cur_char += size+1;
-
-            if(wordhandler(&data[cur_char], &size, "Surname")){
-                return 1;
-            }
-            return 0;
-        } else {
-            continue;
-        }
-    }
-*/
 }
 
