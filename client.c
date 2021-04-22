@@ -3,16 +3,16 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h> 
 
 int main(){
     int server_fifo_fd, client_fifo_fd;
     struct data_to_pass_st my_data;
-    int times_to_send; //FIXME Временно до беск.цикла
     char client_fifo[FIFO_SIZE];
 
     server_fifo_fd = open(SERVER_FIFO_NAME, O_WRONLY);
     if (server_fifo_fd == -1) {
-        fprintf(stderr, "Sorry, no server \n");
+        fprintf(stderr, "Sorry, no server \n Exiting...");
         exit(EXIT_FAILURE);
     }
     my_data.client_pid = getpid();
@@ -25,8 +25,7 @@ int main(){
 
 
     //Отправка данных
-    //TODO Бесконечный цикл 
-    for(times_to_send = 0; times_to_send < 55; times_to_send++) {
+    while (1) {
         scanf("%[^\n]%*c",my_data.some_data); //Считывание команды
         if (handler(my_data.some_data) == 0) {
             write(server_fifo_fd, &my_data, sizeof(my_data));
