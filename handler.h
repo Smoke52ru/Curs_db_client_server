@@ -88,6 +88,11 @@ int datahandler(char* data, int* size){
     datasize += wordsize;
     while ((*ptr != '\0') && (count < 2)){ // Пока обработаны не все слова и не нуль терминатор
         ptr += wordsize + 1;
+        if (wordsize == 0) {
+            fprintf(stderr,"ERROR: Empty word %d\n", count-1);
+            return 0;
+        }
+        wordsize = 0;
         if (wordhandler(ptr,&wordsize, "Data")) {
             fprintf(stderr,"ERROR in %d word of datastream\n", count);
             return 1;
@@ -99,6 +104,9 @@ int datahandler(char* data, int* size){
         fprintf(stderr,"ERROR: Unexpected end of data (word = %d)", count);
         return 1;
     }
+    if (size != NULL) {
+        *size = datasize;
+    }
     return 0;
 }
 
@@ -106,10 +114,13 @@ int datahandler(char* data, int* size){
 //Проверка отправляемой строки на валидность
 int handler(char *data) {
 
+    //Обработка команды выхода
+    if (*data == 'q' || *data =='Q') exit(EXIT_SUCCESS);
+
     //Перевод команды в верхний регистр
-    for (int i = 0; i < 2; i++){
-        *(data + i) = toupper(*(data + i));;
-    }
+    *data = toupper(*data);
+    *(data + 1) = toupper(*(data + 1));
+
     
 
     //Команда == OP
