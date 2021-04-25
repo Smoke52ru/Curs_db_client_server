@@ -8,6 +8,8 @@ int iseng(char ch){
 int isdig(char ch){
     return ((ch >= '0') && (ch <='9'));
 }
+
+/* Не используется в коде
 int isseparator(char* ch, char* separators){
     char* ptr = separators;
     while(*ptr !='\0'){
@@ -17,6 +19,7 @@ int isseparator(char* ch, char* separators){
     }
     return 0;
 }
+*/
 
 //Обработка числа
 int numhandler(char* number, int* size, char* wordname){
@@ -50,7 +53,7 @@ int numhandler(char* number, int* size, char* wordname){
 int wordhandler(char* word, int* size, char* wordname){
     char* ptr = word;
     int i = 0;
-    if (size != NULL) {
+    if (size != NULL) { // Обнуление размера
         *size = 0;
     }
 
@@ -79,29 +82,38 @@ int wordhandler(char* word, int* size, char* wordname){
 // Обработка данных БЕЗ команды 
 int datahandler(char* data, int* size){
     char* ptr = data;
-    int count = 1, wordsize = 0, datasize = 0;
-    if (size != NULL) {
+    int count = 0, wordsize = 0, datasize = 0;
+    if (size != NULL) { // Обнуление размера
         *size = 0;
     }
 
     if (numhandler(data, &wordsize,"Index")) return 1;
     datasize += wordsize;
-    while ((*ptr != '\0') && (count < 2)){ // Пока обработаны не все слова и не нуль терминатор
-        ptr += wordsize + 1;
+    ptr += wordsize;
+
+    while ((*ptr != '\0') && (count <= 2)){ // Пока обработаны не все слова И не нуль терминатор
+        count++;
         if (wordsize == 0) {
             fprintf(stderr,"ERROR: Empty word %d\n", count-1);
-            return 0;
+            return 1;
         }
         wordsize = 0;
-        if (wordhandler(ptr,&wordsize, "Data")) {
-            fprintf(stderr,"ERROR in %d word of datastream\n", count);
+        if (wordhandler(ptr+1,&wordsize, "Data")) {
+            fprintf(stderr,"ERROR: in %d word of datastream\n", count);
             return 1;
         }
         datasize += wordsize;
-        count++;
+        ptr += wordsize+1; //Устанавливет указатель после слова
+
+        //fprintf(stdout,"count=%d ptr=%p\n", count, ptr);
     }
-    if (*ptr == '\0') { // Если новое слово не обработано из-за конца строки
-        fprintf(stderr,"ERROR: Unexpected end of data (word = %d)", count);
+
+    if (count != 2) {
+        fprintf(stderr,"ERROR: Unexpected quantity of words %d\n", count);
+        return 1;
+    }
+    if (*ptr != '\0') { // Если после запроса есть еще данные
+        fprintf(stderr,"ERROR: Unexpected data after [word %d]\n", count);
         return 1;
     }
     if (size != NULL) {
@@ -114,7 +126,7 @@ int datahandler(char* data, int* size){
 //Проверка отправляемой строки на валидность
 int handler(char *data) {
 
-    //Обработка команды выхода
+    //Обработка команды выхода == Q
     if (*data == 'q' || *data =='Q') exit(EXIT_SUCCESS);
 
     //Перевод команды в верхний регистр
@@ -125,7 +137,6 @@ int handler(char *data) {
 
     //Команда == OP
     if (strncmp(data, "OP ", 3) == 0){
-        fprintf(stdout,"cmd is %s\n","OP");
         if (wordhandler(data+3,NULL,"DBName") == 0){      
             return 0;
         } else {
@@ -135,7 +146,6 @@ int handler(char *data) {
 
     //Команда == RD
     } else if(strncmp(data, "RD ", 3) == 0){
-        fprintf(stdout,"cmd is %s\n","RD");
         if (numhandler(data+3,NULL,"Index") == 0){      
             return 0;
         } else {
@@ -145,7 +155,6 @@ int handler(char *data) {
 
     //Команда == WR
     } else if(strncmp(data, "WR ", 3) == 0){
-        fprintf(stdout,"cmd is %s\n","WR");
 
         if (datahandler(data+3,NULL) == 0){      
             return 0;
@@ -156,7 +165,6 @@ int handler(char *data) {
 
     //Команда == AD
     } else if(strncmp(data, "AD ", 3) == 0){
-        fprintf(stdout,"cmd is %s\n","AD");
 
         if (datahandler(data+3,NULL) == 0){      
             return 0;
@@ -167,7 +175,6 @@ int handler(char *data) {
 
     //Команда == DL
     } else if(strncmp(data, "DL ", 3) == 0){
-        fprintf(stdout,"cmd is %s\n","DL");
         if (numhandler(data+3,NULL,"Index") == 0){      
             return 0;
         } else {

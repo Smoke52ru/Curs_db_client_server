@@ -12,7 +12,7 @@ int main(){
 
     server_fifo_fd = open(SERVER_FIFO_NAME, O_WRONLY);
     if (server_fifo_fd == -1) {
-        fprintf(stderr, "Sorry, no server \n Exiting...");
+        fprintf(stderr, "Sorry, no server \nExiting...\n");
         exit(EXIT_FAILURE);
     }
     my_data.client_pid = getpid();
