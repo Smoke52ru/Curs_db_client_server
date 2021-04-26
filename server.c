@@ -20,6 +20,7 @@ int main(){
         if (read_res > 0){
             //Преобразуем
             tmp_char_ptr = my_data.some_data;
+            //TODO работа с БД
             while (*tmp_char_ptr) {
                 //*tmp_char_ptr = toupper(*tmp_char_ptr);
                 tmp_char_ptr++;
