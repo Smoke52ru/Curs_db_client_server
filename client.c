@@ -33,6 +33,7 @@ int main(){
             fprintf(stderr,"ERROR: Command is incorrect\n");
             continue;
         }
+        memset(my_data.some_data,0,BUFFER_SIZE-1);
         client_fifo_fd = open(client_fifo, O_RDONLY);
         if (client_fifo_fd != -1) {
             if (read(client_fifo_fd, &my_data, sizeof(my_data)) > 0){

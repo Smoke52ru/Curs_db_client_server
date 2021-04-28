@@ -126,8 +126,10 @@ int datahandler(char* data, int* size){
 //Проверка отправляемой строки на валидность
 int handler(char *data) {
 
-    //Обработка команды выхода == Q
-    if (*data == 'q' || *data =='Q') exit(EXIT_SUCCESS);
+    //Обработка команды выхода == [Q,q,\0]
+    if (*data == 'q' || *data =='Q' || *data == '\0') exit(EXIT_SUCCESS);
+
+
 
     //Перевод команды в верхний регистр
     *data = toupper(*data);
