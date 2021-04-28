@@ -1,28 +1,12 @@
-# 
 # Формат запроса:
-# [CC INDEX NAME SURNAME]
-#
-# Формат записи: 
-# [INDEX NAME SURNAME] 
+# [CC INDEX NAME SUNAME]
 #
 # Команды 
-# OP - открыть              {CC DBNAME}
-# RD - прочитать            {CC INDEX}
-# WR - записать             {CC INDEX NAME SURNAME}
-# AD - добавить в конец     {CC INDEX NAME SURNAME}
-# DL - удалить запись       {CC INDEX}        
-#    
-# Чтобы выйти из клиента начните строку с символа Q (q)
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
+# OP - открыть
+# RD - прочитать
+# WR - записать
+# AD - добавить в конец
+# DL - удалить запись
 #
 #
 #

@@ -21,7 +21,7 @@ int main(){
             //Преобразуем
             tmp_char_ptr = my_data.some_data;
             while (*tmp_char_ptr) {
-                //*tmp_char_ptr = toupper(*tmp_char_ptr);
+                *tmp_char_ptr = toupper(*tmp_char_ptr);
                 tmp_char_ptr++;
             }
             //Отправляем обратно
