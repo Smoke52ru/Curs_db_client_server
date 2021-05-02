@@ -45,7 +45,7 @@ int numhandler(char* number, int* size, char* wordname){
         *size = i;
     } 
 
-    fprintf(stdout, "[%s] is correct\n", wordname);
+    //fprintf(stdout, "[%s] is correct\n", wordname);
     return 0;
 }
 
@@ -75,7 +75,7 @@ int wordhandler(char* word, int* size, char* wordname){
         *size = i;
     } 
 
-    fprintf(stdout, "[%s] is correct\n", wordname);
+    //fprintf(stdout, "[%s] is correct\n", wordname);
     return 0;
 }
 

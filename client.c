@@ -26,6 +26,7 @@ int main(){
 
     //Отправка данных
     while (1) {
+        fprintf(stdout, "\nEnter the command:\n");
         scanf("%[^\n]%*c",my_data.some_data); //Считывание команды
         if (handler(my_data.some_data) == 0) {
             write(server_fifo_fd, &my_data, sizeof(my_data));
@@ -37,7 +38,7 @@ int main(){
         client_fifo_fd = open(client_fifo, O_RDONLY);
         if (client_fifo_fd != -1) {
             if (read(client_fifo_fd, &my_data, sizeof(my_data)) > 0){
-                printf("recieved from server: {%s}\n", my_data.some_data);
+                printf("recieved from server: \n{%s}\n", my_data.some_data);
             }
             close(client_fifo_fd);
         }
