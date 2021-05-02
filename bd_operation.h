@@ -1,12 +1,11 @@
 #include<string.h>
 #include<stdio.h>
+#include <unistd.h>
 
 #define BUFFER_SIZE 128
-#define COMLEN 3
 #define MAXNAME 30
-#define MAXINDEX 5
 #define MAXSURNAME 30
-#define INF #
+
 
 struct dbdata
 {
@@ -56,17 +55,17 @@ int dbgoto(int number)
 
 int dbread(int string_number){
 	dbgoto(string_number);
-	char result[MAXNAME + MAXSURNAME + 1];
+	char buffer[BUFFER_SIZE];
 	
-	if(!fread(result, db.recsize, 1, db.rec)){
-		if(result[0] == '#'){
-			strcpy(data.name, "EMPTY");
-			strcpy(data.surname, "EMPTY");
+	if(fread(buffer, db.recsize, 1, db.rec)){
+		if(buffer[0] == '#'){
+			strcpy(data.name, "#DELETED");
+			strcpy(data.surname, "#DELETED");
+			return 0;
 		}
 		else{
-			sscanf(result, "%s %s", data.name, data.surname);
+			sscanf(buffer, "%s %s", data.name, data.surname);
 		}
-		return 0;
 	}
 	return 1;
 }
@@ -93,8 +92,54 @@ int dbdelete(int string_number){
 	return 0;
 }
 
+int dbcompress(void){
+	char buffer[BUFFER_SIZE];
+	int i, dbsize;
+	int dest = 0, src = 0, deleted=0;
+
+	dbsize = dbreccount();
+
+	i = 1;
+	while (i<=dbsize){
+		fseek(db.rec, db.recsize * (i-1), SEEK_SET);
+		if (fread(buffer, 1, 1, db.rec)){ 
+			if ((buffer[0] == '#') && (dest == 0)) { // поиск удаленной строки
+				dest = i;
+			} else if ((buffer[0] !='#') && (dest != 0)) { 
+				src = i;
+			}
+			if ((dest != 0) && (src != 0)){ // перенос
+				fseek(db.rec, db.recsize * (src-1), SEEK_SET);
+				if (fread(buffer, db.recsize, 1, db.rec)){
+
+					fseek(db.rec, db.recsize * (src-1), SEEK_SET);
+					fwrite("#", 1, 1, db.rec);
+
+					fseek(db.rec, db.recsize * (dest-1), SEEK_SET);
+					fwrite(buffer, db.recsize, 1, db.rec);
+					i = dest;
+					dest = 0;
+					src = 0;
+				}
+			}
+		}
+		i++;
+	}
+	i=0;
+	fseek(db.rec, 0L, SEEK_SET);
+	if (fread(buffer, 1, 1, db.rec))
+		while (buffer[0] != '#'){
+			i++;
+			fseek(db.rec, db.recsize-1, SEEK_CUR);
+			if (!fread(buffer, 1, 1, db.rec)) return 0;
+		}
+	truncate(db.name, i*db.recsize);
+	return 1;
+}
+
 int dbclose(void){
-	//Зачистка затертого говна
-	remove(db.name);
+	dbcompress();
+
+	if (dbreccount() == 0) remove(db.name);
 	fclose(db.rec);
 }
