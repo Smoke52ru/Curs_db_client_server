@@ -18,13 +18,13 @@ struct dbinfo {
 	int recsize;
 }db;
 
-int dbopen(char* fname, int recsize){
+int dbopen(char* fname){
     if((db.rec = fopen(fname,"r+")) == NULL) // Если файл не открывается
 		       db.rec = fopen(fname,"w+"); // Тогда создаем
     if(db.rec == NULL) return 0;
 	
     strcpy(db.name,fname);
-    db.recsize = recsize;
+    db.recsize = MAXNAME + MAXSURNAME + 1;
     
 	return 1;
 }
@@ -44,7 +44,7 @@ int dbreccount(void)
 
 int dbgoto(int number)
 {
-	if(number >= dbreccount())  return 0;
+	if(number > dbreccount())  return 0;
 	if(number == 0) {
 		fseek(db.rec, 0L, SEEK_END);
 		return 1;
