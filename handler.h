@@ -80,20 +80,22 @@ int wordhandler(char* word, int* size, char* wordname){
 }
 
 // Обработка данных БЕЗ команды 
-int datahandler(char* data, int* size){
+int datahandler(char* data, int* size, int numflag){
     char* ptr = data;
     int count = 0, wordsize = 0, datasize = 0;
     if (size != NULL) { // Обнуление размера
         *size = 0;
     }
 
-    if (numhandler(data, &wordsize,"Index")) return 1;
-    datasize += wordsize;
-    ptr += wordsize;
+    if (numflag) {    
+        if (numhandler(data, &wordsize,"Index")) return 1;
+        datasize += wordsize;
+        ptr += wordsize;
+    }
 
     while ((*ptr != '\0') && (count <= 2)){ // Пока обработаны не все слова И не нуль терминатор
         count++;
-        if (wordsize == 0) {
+        if ((wordsize == 0) && (numflag+count-1)) {
             fprintf(stderr,"ERROR: Empty word %d\n", count-1);
             return 1;
         }
@@ -158,7 +160,7 @@ int handler(char *data) {
     //Команда == WR
     } else if(strncmp(data, "WR ", 3) == 0){
 
-        if (datahandler(data+3,NULL) == 0){      
+        if (datahandler(data+3,NULL,1) == 0){      
             return 0;
         } else {
             fprintf(stderr,"ERROR: Data is incorrect\n");
@@ -168,7 +170,7 @@ int handler(char *data) {
     //Команда == AD
     } else if(strncmp(data, "AD ", 3) == 0){
 
-        if (datahandler(data+3,NULL) == 0){      
+        if (datahandler(data+2,NULL,0) == 0){      
             return 0;
         } else {
             fprintf(stderr,"ERROR: Data is incorrect\n");
@@ -183,6 +185,8 @@ int handler(char *data) {
             fprintf(stderr,"ERROR: Data is incorrect\n");
             return 1;
         }
+    } else if(strcmp(data, "CL") == 0){
+        return 0;
     }
 
     //Исключение
