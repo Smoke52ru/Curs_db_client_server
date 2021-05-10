@@ -185,6 +185,8 @@ int handler(char *data) {
             fprintf(stderr,"ERROR: Data is incorrect\n");
             return 1;
         }
+    } else if(strcmp(data, "CL") == 0){
+        return 0;
     }
 
     //Исключение
